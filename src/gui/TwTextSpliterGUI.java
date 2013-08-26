@@ -13,12 +13,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
@@ -337,11 +339,13 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
         
         
         
+        
         if(RB_lines_per_file.isSelected()){//split the file by lines
             try{
                 split_by_lines = Integer.parseInt(TF_lines_per_file.getText());
             }catch(NumberFormatException e){
-                System.out.println("Warning: line is  null");
+                JOptionPane.showMessageDialog(null, "Please input the lines", "Warning",JOptionPane.WARNING_MESSAGE);
+                return;
             }
             
             Integer line_counter = 0;
@@ -350,35 +354,49 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
                 buf_reader = new BufferedReader(new FileReader(input_fd));
                 tmp_line = buf_reader.readLine();//read the first line from file
                 
-                System.out.println("line:" + split_by_lines);//test
-                File output_fd = new File(output_file_name);//create the first output file
-                buf_writer = new BufferedWriter
-                        ( new OutputStreamWriter
-                        ( new FileOutputStream(output_fd),"UTF-8") );//set the output stream encoding as utf-8
+                //System.out.println("line:" + split_by_lines);//test
+                //File output_fd = new File(output_file_name);//create the first output file
                 
+                buf_writer = new BufferedWriter( new OutputStreamWriter( 
+                        new FileOutputStream(output_file_name),"UTF-8" ) );//set the output stream encoding as utf-8
+ 
                 while(tmp_line != null){
                     
                     line_counter++;
-                    System.out.println(tmp_line);//test
-                    buf_writer.write(tmp_line);//write into output file
+                    //System.out.println(tmp_line);//test
+                    try{
+                        buf_writer.write(tmp_line);//write into output file
+                        buf_writer.newLine();
+                        buf_writer.flush();
+                    }catch(IOException e){
+                        //System.out.println("Warning: writer wrote error");
+                        JOptionPane.showMessageDialog(null, "Error: an error occured when writing into file", "Warning",JOptionPane.WARNING_MESSAGE);
+                    }
                     
-                    if(line_counter == split_by_lines){
+                    if(line_counter == split_by_lines){//change to new file
+                        
+                        //buf_writer.close();//close the old output file
                         
                         line_counter = 0;
                         output_file_name_index++;
                         output_file_name = set_output_file_name(output_file_name_format, output_file_name_index);
-                        buf_writer = new BufferedWriter( new OutputStreamWriter(new FileOutputStream(file_chooser.getCurrentDirectory().toString()+output_file_name),"UTF-8") );
+                        buf_writer = new BufferedWriter( new OutputStreamWriter ( 
+                                new FileOutputStream(output_file_name),"UTF-8") );
                         
-                        System.out.println("==============");//test
+                        //System.out.println("==============");//test
                         
                     }
                     
                     tmp_line = buf_reader.readLine();//read next line from file
                 }
+                buf_writer.close();
+                buf_reader.close();
+                JOptionPane.showMessageDialog(null, "File splitted successfully", "Notice",JOptionPane.WARNING_MESSAGE);
             } catch (FileNotFoundException ex) {
-                //TODO: path error
+                JOptionPane.showMessageDialog(null, "Error: file not found", "Warning",JOptionPane.WARNING_MESSAGE);
             } catch (IOException ex) {
                 Logger.getLogger(TwTextSpliterGUI.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "Error: unknown error occured", "Warning",JOptionPane.WARNING_MESSAGE);
             }
             
         }else if(RB_size_per_file.isSelected()){//split the file by size
@@ -388,7 +406,8 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
             final String split_by_delimiter = TF_custom_delimiter.getText();
             //TODO
         }else{
-            //TODO
+            JOptionPane.showMessageDialog(null, "You must select a split method", "Warning",JOptionPane.WARNING_MESSAGE);
+            return;
         }
         
         
@@ -415,8 +434,8 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
             output_file_name = output_file_name_format.substring(2);
         }
         
-        System.out.println("index_offset:"+index_offset);//test 
-        System.out.println("output file name:"+String.format(output_file_name, output_file_name_index+index_offset));//test
+        //System.out.println("index_offset:"+index_offset);//test 
+        //System.out.println("output file name:"+String.format(output_file_name, output_file_name_index+index_offset));//test
         if(index_offset != 0){
             return String.format(output_file_name, output_file_name_index+index_offset);
         }else{
