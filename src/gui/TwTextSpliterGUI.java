@@ -25,7 +25,7 @@ import javax.swing.filechooser.FileFilter;
 
 /**
  *
- * @author CBB
+ * @author Mako Chang
  */
 public class TwTextSpliterGUI extends javax.swing.JFrame { 
     //final private Integer split_by_lines = 0;
@@ -327,10 +327,9 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_BT_browseActionPerformed
 
     private void BT_splitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BT_splitActionPerformed
-        final Integer split_by_lines = Integer.parseInt(TF_lines_per_file.getText());
+        Integer split_by_lines = 0;
         File input_fd = new File(TF_file_path.getText());
         BufferedReader buf_reader;
-        //File output_fd;
         BufferedWriter buf_writer;
         String tmp_line;
         Integer output_file_name_index = 0;
@@ -339,24 +338,42 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
         
         
         if(RB_lines_per_file.isSelected()){//split the file by lines
+            try{
+                split_by_lines = Integer.parseInt(TF_lines_per_file.getText());
+            }catch(NumberFormatException e){
+                System.out.println("Warning: line is  null");
+            }
+            
             Integer line_counter = 0;
 
             try {
                 buf_reader = new BufferedReader(new FileReader(input_fd));
-                tmp_line = buf_reader.readLine();
-                //output_fd = new File(output_file_name);
-                buf_writer = new BufferedWriter( new OutputStreamWriter(new FileOutputStream(output_file_name),"UTF-8") );
+                tmp_line = buf_reader.readLine();//read the first line from file
+                
+                System.out.println("line:" + split_by_lines);//test
+                File output_fd = new File(output_file_name);//create the first output file
+                buf_writer = new BufferedWriter
+                        ( new OutputStreamWriter
+                        ( new FileOutputStream(output_fd),"UTF-8") );//set the output stream encoding as utf-8
                 
                 while(tmp_line != null){
+                    
                     line_counter++;
-                    buf_writer.write(tmp_line);
+                    System.out.println(tmp_line);//test
+                    buf_writer.write(tmp_line);//write into output file
+                    
                     if(line_counter == split_by_lines){
+                        
                         line_counter = 0;
                         output_file_name_index++;
                         output_file_name = set_output_file_name(output_file_name_format, output_file_name_index);
                         buf_writer = new BufferedWriter( new OutputStreamWriter(new FileOutputStream(file_chooser.getCurrentDirectory().toString()+output_file_name),"UTF-8") );
+                        
+                        System.out.println("==============");//test
+                        
                     }
-                    tmp_line = buf_reader.readLine();
+                    
+                    tmp_line = buf_reader.readLine();//read next line from file
                 }
             } catch (FileNotFoundException ex) {
                 //TODO: path error
@@ -380,17 +397,30 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_BT_splitActionPerformed
 
-    private String set_output_file_name(String output_file_name_format,Integer output_file_name_index){
+    private String set_output_file_name(final String output_file_name_format,Integer output_file_name_index){
         int index_offset = 0;
+        String output_file_name = output_file_name_format;
+        
+        /*
         try{
             index_offset = Integer.parseInt(output_file_name_format);
         }catch(NumberFormatException e){
+        }*/
+        
+        if(output_file_name_format.startsWith("1+")){
+            index_offset = 1;
         }
-        System.out.printf("%d\n",index_offset);
+        
+        if(output_file_name_format.contains("+")){
+            output_file_name = output_file_name_format.substring(2);
+        }
+        
+        System.out.println("index_offset:"+index_offset);//test 
+        System.out.println("output file name:"+String.format(output_file_name, output_file_name_index+index_offset));//test
         if(index_offset != 0){
-            return String.format(output_file_name_format, output_file_name_index+index_offset);
+            return String.format(output_file_name, output_file_name_index+index_offset);
         }else{
-            return String.format(output_file_name_format, output_file_name_index);
+            return String.format(output_file_name, output_file_name_index);
         }
     }
     
@@ -445,10 +475,10 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
     private void renew_output_file_name_format(int index){
         switch(index){
             case 0:
-                output_file_name_format = "1%d.txt";
+                output_file_name_format = "1+%d.txt";
                 break;
             case 1:
-                output_file_name_format = "1%02d.txt";
+                output_file_name_format = "1+%02d.txt";
                 break;
             case 2:
                 output_file_name_format = "%d.txt";
