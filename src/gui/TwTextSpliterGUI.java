@@ -361,71 +361,11 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
         
         if(RB_lines_per_file.isSelected()){
             
-            /*========================== split the file by lines ==========================*/
-            /*
-            final Integer split_by_lines;
-            try{
-                split_by_lines = Integer.parseInt(TF_lines_per_file.getText());
-            }catch(NumberFormatException e){
-                JOptionPane.showMessageDialog(null, "Please input the lines", "Warning",JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            
-            Integer line_counter = 0;
-
-            try {
-                buf_reader = new BufferedReader(new FileReader(input_fd));
-                tmp_line = buf_reader.readLine();//read the first line from file
-                
-                //System.out.println("line:" + split_by_lines);//test
-                
-                buf_writer = new BufferedWriter( new OutputStreamWriter( 
-                        new FileOutputStream(output_file_name),"UTF-8" ) );//set the output stream encoding as utf-8
- 
-                while(tmp_line != null){
-                    
-                    line_counter++;
-                    //System.out.println(tmp_line);//test
-                    try{
-                        buf_writer.write(tmp_line);//write into output file
-                        buf_writer.newLine();
-                        buf_writer.flush();
-                    }catch(IOException e){
-                        //System.out.println("Warning: writer wrote error");
-                        JOptionPane.showMessageDialog(null, "Error: an error occured when writing into file", "Warning",JOptionPane.WARNING_MESSAGE);
-                    }
-                    
-                    if(line_counter == split_by_lines){//change to new file
-                        
-                        //buf_writer.close();//close the old output file
-                        
-                        line_counter = 0;
-                        output_file_name_index++;
-                        output_file_name = set_output_file_name(output_file_name_format, output_file_name_index);
-                        buf_writer = new BufferedWriter( new OutputStreamWriter ( 
-                                new FileOutputStream(output_file_name),"UTF-8") );
-                        
-                        //System.out.println("==============");//test
-                        
-                    }
-                    
-                    tmp_line = buf_reader.readLine();//read next line from file
-                }
-                buf_writer.close();
-                buf_reader.close();
-                JOptionPane.showMessageDialog(null, "File splitted successfully", "Notice",JOptionPane.WARNING_MESSAGE);
-            } catch (FileNotFoundException ex) {
-                JOptionPane.showMessageDialog(null, "Error: file not found", "Warning",JOptionPane.WARNING_MESSAGE);
-                return;
-            } catch (IOException ex) {
-                Logger.getLogger(TwTextSpliterGUI.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(null, "Error: unknown error occured", "Warning",JOptionPane.WARNING_MESSAGE);
-                return;
-            }*/
-            
             split(split_method.SPLIT_BY_LINES,input_fd);
             
         }else if(RB_size_per_file.isSelected()){
+            
+            split(split_method.SPLIT_BY_SIZE,input_fd);
             
             /*========================== split the file by size ==========================*/
             /*
@@ -534,37 +474,55 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
         //split_method.SPLIT_BY_LINES only
         Integer line_counter = 1;
         Integer split_by_lines = 0;
-        if(method == split_method.SPLIT_BY_LINES){
-            try{
+        if (method == split_method.SPLIT_BY_LINES) {
+            try {
                 split_by_lines = Integer.parseInt(TF_lines_per_file.getText());
                 //System.out.println("line 540 split_by_lines: "+split_by_lines);//debug msg
-            }catch(NumberFormatException e){
-                JOptionPane.showMessageDialog(null, "Please input the lines", "Warning",JOptionPane.WARNING_MESSAGE);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Please input the lines", "Warning", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if (split_by_lines.intValue() <= 0) {
+                System.out.println("Error: invalid number of line");
+                JOptionPane.showMessageDialog(null, "Error: invalid number of lines", "Warning", JOptionPane.WARNING_MESSAGE);
                 return;
             }
         }
         
         //split_method.SPLIT_BY_SIZE only
-        int file_size_counter = 0;
+        Integer file_size_counter = 0;
         Integer split_by_size = 0;//unit of split_by_size is byte
-        if(method == split_method.SPLIT_BY_SIZE){
-            try{
+        if (method == split_method.SPLIT_BY_SIZE) {
+            try {
                 split_by_size = Integer.parseInt(TF_size_per_file.getText());
-                //System.out.println("line 552 split_by_size: "+split_by_size);//debug msg
-            }catch(NumberFormatException e){
-                JOptionPane.showMessageDialog(null, "Please input the size", "Warning",JOptionPane.WARNING_MESSAGE);
+                System.out.println("line 552 split_by_size: " + split_by_size);//debug msg
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Please input the size", "Warning", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (split_by_size.intValue() <= 0) {
+                System.out.println("Error: invalid size");
+                JOptionPane.showMessageDialog(null, "Error: invalid size", "Warning", JOptionPane.WARNING_MESSAGE);
                 return;
             }
             
-            split_by_size = split_by_size << 10;//KB to byte
-            
-            /*
-             * TODO
-            if(unit is mb){
-                split_by_size *= 1024
-            }else if(unit is gb){
-                split_by_size *= 1024*1024;
-            }*/
+            switch (CB_size_per_file.getSelectedIndex()) {
+                case 0:
+                    //KB is selected
+                    split_by_size = split_by_size.intValue() << 10;//KB to byte
+                    break;
+                case 1:
+                    //MB is selected
+                    split_by_size = split_by_size.intValue() << 20;//MB to byte
+                    break;
+                case 2:
+                    //GB is selected
+                    split_by_size = split_by_size.intValue() << 30;//GB to byte
+                    break;
+                default:
+                    //nothing
+            }
         }
         
         try {
@@ -584,6 +542,8 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
                         break;
                     case SPLIT_BY_SIZE:
                         file_size_counter += tmp_line.getBytes(utf8).length;
+                        //System.out.println("fiie_size_counter: "+file_size_counter);//debug msg
+                        //TODO : other encoding type
                         break;
                     case SPLIT_BY_CUSTOM_DELIMITER:
                         //TODO
@@ -592,14 +552,6 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
                         //nothing
                     
                 }
-                /*
-                if(method == split_method.SPLIT_BY_LINES){
-                    //System.out.println("line counter: "+line_counter);//debug msg
-                    line_counter++;
-                }else if(method == split_method.SPLIT_BY_SIZE){
-                    file_size_counter += tmp_line.getBytes(utf8).length;
-                    //TODO : other encoding type
-                }*/
 
                 //write into output file
                 try {
@@ -612,14 +564,9 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
                     return;
                 }
                 
+                //create new files
                 switch (method) {
                     case SPLIT_BY_LINES:
-                        
-                        if (split_by_lines <= 0) {
-                            System.out.println("Error: invalid number of line");
-                            JOptionPane.showMessageDialog(null, "Error: invalid number of lines", "Warning", JOptionPane.WARNING_MESSAGE);
-                            return;
-                        }
 
                         if (line_counter.equals(split_by_lines)) {//change to new file
                             //System.out.println("line 624 line_counter == split_by_lines");
@@ -630,16 +577,10 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
                                     new FileOutputStream(output_file_name), "UTF-8"));
                         }
                         break;
-                        
-                    case SPLIT_BY_SIZE:
-                        
-                        if (split_by_size <= 0) {
-                            System.out.println("Error: invalid size");
-                            JOptionPane.showMessageDialog(null, "Error: invalid size", "Warning", JOptionPane.WARNING_MESSAGE);
-                            return;
-                        }
 
-                        if (file_size_counter >= split_by_size) {//change to new file
+                    case SPLIT_BY_SIZE:
+
+                        if (file_size_counter.intValue() >= split_by_size.intValue()) {//change to new file
                             System.out.println("line 607 file_size_counter >= split_by_size");
                             file_size_counter = 0;
                             output_file_name_index++;
@@ -649,48 +590,11 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
                         }
                         break;
                     case SPLIT_BY_CUSTOM_DELIMITER:
-                        
+                        //TODO
                         break;
                     default:
                     //nothing
                 }
-
-                /*
-                if(method == split_method.SPLIT_BY_SIZE){
-                    
-                    if(split_by_size <= 0){
-                        System.out.println("Error: invalid size");
-                        JOptionPane.showMessageDialog(null, "Error: invalid size", "Warning", JOptionPane.WARNING_MESSAGE);
-                        return;
-                    }
-                    
-                    if (file_size_counter >= split_by_size) {//change to new file
-                        System.out.println("line 607 file_size_counter >= split_by_size");
-                        file_size_counter = 0;
-                        output_file_name_index++;
-                        output_file_name = set_output_file_name(output_file_name_format, output_file_name_index);
-                        buf_writer = new BufferedWriter(new OutputStreamWriter(
-                                new FileOutputStream(output_file_name), "UTF-8"));
-                    }
-                    
-                }else if(method == split_method.SPLIT_BY_LINES){
-                    
-                    if(split_by_lines <= 0){
-                        System.out.println("Error: invalid number of line");
-                        JOptionPane.showMessageDialog(null, "Error: invalid number of lines", "Warning", JOptionPane.WARNING_MESSAGE);
-                        return;
-                    }
-                    
-                    if(line_counter == split_by_lines){//change to new file
-                        System.out.println("line 624 line_counter == split_by_lines");
-                        line_counter = 0;
-                        output_file_name_index++;
-                        output_file_name = set_output_file_name(output_file_name_format, output_file_name_index);
-                        buf_writer = new BufferedWriter( new OutputStreamWriter ( 
-                                new FileOutputStream(output_file_name),"UTF-8") );
-                    }
-                    
-                }*/
 
                 tmp_line = buf_reader.readLine();//read next line from file
             }
