@@ -10,19 +10,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 
 /**
@@ -72,8 +66,8 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
         LB_input_encoding = new javax.swing.JLabel();
         CB_delete_source = new javax.swing.JCheckBox();
         LB_output_encoding = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
-        jComboBox2 = new javax.swing.JComboBox();
+        CB_input_encoding = new javax.swing.JComboBox();
+        CB_output_encoding = new javax.swing.JComboBox();
         LB_output_filename = new javax.swing.JLabel();
         LB_output_file_path = new javax.swing.JLabel();
         TF_output_file_path = new javax.swing.JTextField();
@@ -152,9 +146,9 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
 
         LB_output_encoding.setText("Output Encoding");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ANSI", "UTF-8" }));
+        CB_input_encoding.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "AUTO", "ANSI", "UTF-8" }));
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ANSI", "UTF-8" }));
+        CB_output_encoding.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "AUTO", "ANSI", "UTF-8" }));
 
         LB_output_filename.setText("Output file name");
 
@@ -230,8 +224,8 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(CB_output_encoding, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(CB_input_encoding, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGap(0, 0, Short.MAX_VALUE))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                         .addGap(0, 0, Short.MAX_VALUE)
@@ -275,14 +269,13 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(RB_custom_delimiter)
                             .addComponent(TF_custom_delimiter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(LB_input_encoding)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(CB_input_encoding, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(LB_output_encoding)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(CB_output_encoding, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(LB_language)
@@ -405,7 +398,7 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
         }else if(RB_size_per_file.isSelected()){
             
             /*========================== split the file by size ==========================*/
-            
+            /*
             int file_size_counter = 0;
             Integer split_by_size;//unit of split_by_size is byte
             try{
@@ -416,13 +409,13 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
             }
             
             split_by_size = split_by_size << 10;//KB to byte
-            /*
-             * TODO
+            
+            TODO
             if(unit is mb){
                 split_by_size *= 1024
             }else if(unit is gb){
                 split_by_size *= 1024*1024;
-            }*/
+            }
             
             try{
                 
@@ -473,14 +466,18 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
                 Logger.getLogger(TwTextSpliterGUI.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(null, "Error: unknown error occured", "Warning",JOptionPane.WARNING_MESSAGE);
                 return;
-            }
+            }*/
         }else if(RB_custom_delimiter.isSelected()){
             
             /*========================== split the file by custom delimiter ==========================*/
             
             final String split_by_delimiter = TF_custom_delimiter.getText();
-            //TODO
+            
+            
+            
+            
         }else{
+            //didnt select any split method
             JOptionPane.showMessageDialog(null, "You must select a split method", "Warning",JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -491,6 +488,127 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_BT_splitActionPerformed
 
+    private enum split_method{
+        SPLIT_BY_LINES,
+        SPLIT_BY_SIZE,
+        SPLIT_BY_CUSTOM_DELIMITER
+    }
+    
+    private void split(split_method method,File input_fd){
+        BufferedReader buf_reader;
+        BufferedWriter buf_writer;
+        String tmp_line;
+        Integer output_file_name_index = 0;
+        String output_file_name = set_output_file_name(output_file_name_format, output_file_name_index);
+        
+        //split_method.SPLIT_BY_LINES only
+        Integer line_counter = 0;
+        Integer split_by_lines = 0;
+        if(method == split_method.SPLIT_BY_LINES){
+            try{
+                split_by_lines = Integer.parseInt(TF_lines_per_file.getText());
+            }catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(null, "Please input the lines", "Warning",JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        }
+        
+        //split_method.SPLIT_BY_SIZE only
+        int file_size_counter = 0;
+        Integer split_by_size = 0;//unit of split_by_size is byte
+        if(method == split_method.SPLIT_BY_SIZE){
+            try{
+                split_by_size = Integer.parseInt(TF_size_per_file.getText());
+            }catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(null, "Please input the size", "Warning",JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            split_by_size = split_by_size << 10;//KB to byte
+            
+            /*
+             * TODO
+            if(unit is mb){
+                split_by_size *= 1024
+            }else if(unit is gb){
+                split_by_size *= 1024*1024;
+            }*/
+        }
+        
+        try {
+
+            buf_reader = new BufferedReader(new FileReader(input_fd));
+            tmp_line = buf_reader.readLine();//read the first line from file
+
+            buf_writer = new BufferedWriter(new OutputStreamWriter(
+                    new FileOutputStream(output_file_name), "UTF-8"));//set the output stream encoding as utf-8
+
+            while (tmp_line != null) {
+
+                
+                if(method == split_method.SPLIT_BY_SIZE){
+                    file_size_counter += tmp_line.getBytes(utf8).length;
+                    //TODO : other encoding type
+                }else if(method == split_method.SPLIT_BY_LINES){
+                    line_counter++;
+                }
+
+                try {
+                    buf_writer.write(tmp_line);//write into output file
+                    buf_writer.newLine();
+                    buf_writer.flush();
+                } catch (IOException e) {
+                    System.out.println("Error: an error occured when writing into file");
+                    JOptionPane.showMessageDialog(null, "Error: an error occured when writing into file", "Warning", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                if(method == split_method.SPLIT_BY_SIZE){
+                    if(split_by_size == 0){
+                        System.out.println("Error: invalid size");
+                        JOptionPane.showMessageDialog(null, "Error: invalid size", "Warning", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                    
+                    if (file_size_counter >= split_by_size) {//change to new file
+                        file_size_counter = 0;
+                        output_file_name_index++;
+                        output_file_name = set_output_file_name(output_file_name_format, output_file_name_index);
+                        buf_writer = new BufferedWriter(new OutputStreamWriter(
+                                new FileOutputStream(output_file_name), "UTF-8"));
+                    }
+                }else if(method ==split_method.SPLIT_BY_LINES){
+                    if(split_by_lines == 0){
+                        System.out.println("Error: invalid number of line");
+                        JOptionPane.showMessageDialog(null, "Error: invalid number of lines", "Warning", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                    
+                    if(line_counter == split_by_lines){//change to new file
+                        line_counter = 0;
+                        output_file_name_index++;
+                        output_file_name = set_output_file_name(output_file_name_format, output_file_name_index);
+                        buf_writer = new BufferedWriter( new OutputStreamWriter ( 
+                                new FileOutputStream(output_file_name),"UTF-8") );
+                    }
+                }
+
+                tmp_line = buf_reader.readLine();//read next line from file
+            }
+            buf_writer.close();
+            buf_reader.close();
+            JOptionPane.showMessageDialog(null, "File splitted successfully", "Notice", JOptionPane.WARNING_MESSAGE);
+
+        } catch (FileNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "Error: file not found", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        } catch (IOException ex) {
+            Logger.getLogger(TwTextSpliterGUI.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error: unknown error occured", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+    }
+    
     private String set_output_file_name(final String output_file_name_format,Integer output_file_name_index){
         int index_offset = 0;
         String output_file_name = output_file_name_format;
@@ -604,7 +722,9 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
     private javax.swing.JButton BT_save_as;
     private javax.swing.JButton BT_split;
     private javax.swing.JCheckBox CB_delete_source;
+    private javax.swing.JComboBox CB_input_encoding;
     private javax.swing.JComboBox CB_language;
+    private javax.swing.JComboBox CB_output_encoding;
     private javax.swing.JComboBox CB_output_file_name_format;
     private javax.swing.JComboBox CB_size_per_file;
     private javax.swing.JLabel LB_filepath;
@@ -622,8 +742,6 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
     private javax.swing.JTextField TF_lines_per_file;
     private javax.swing.JTextField TF_output_file_path;
     private javax.swing.JTextField TF_size_per_file;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBox2;
     // End of variables declaration//GEN-END:variables
 }
 
