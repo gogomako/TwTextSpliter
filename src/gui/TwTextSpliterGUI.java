@@ -50,19 +50,22 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
         TF_lines_per_file.addMouseListener(new MouseAdapter(){
             @Override
             public void mouseClicked(MouseEvent e){
-                RB_lines_per_file.doClick();
+                //RB_lines_per_file.doClick();
+                RB_lines_per_file.setSelected(rootPaneCheckingEnabled);
             }
         });
         TF_size_per_file.addMouseListener(new MouseAdapter(){
             @Override
             public void mouseClicked(MouseEvent e){
-                RB_size_per_file.doClick();
+                //RB_size_per_file.doClick();
+                RB_size_per_file.setSelected(rootPaneCheckingEnabled);
             }
         });
         TF_custom_delimiter.addMouseListener(new MouseAdapter(){
             @Override
             public void mouseClicked(MouseEvent e){
                 RB_custom_delimiter.doClick();
+                RB_custom_delimiter.setSelected(rootPaneCheckingEnabled);
             }
         });
     }
@@ -366,77 +369,7 @@ public class TwTextSpliterGUI extends javax.swing.JFrame {
         }else if(RB_size_per_file.isSelected()){
             
             split(split_method.SPLIT_BY_SIZE,input_fd);
-            
-            /*========================== split the file by size ==========================*/
-            /*
-            int file_size_counter = 0;
-            Integer split_by_size;//unit of split_by_size is byte
-            try{
-                split_by_size = Integer.parseInt(TF_size_per_file.getText());
-            }catch(NumberFormatException e){
-                JOptionPane.showMessageDialog(null, "Please input the size", "Warning",JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            
-            split_by_size = split_by_size << 10;//KB to byte
-            
-            TODO
-            if(unit is mb){
-                split_by_size *= 1024
-            }else if(unit is gb){
-                split_by_size *= 1024*1024;
-            }
-            
-            try{
-                
-                buf_reader = new BufferedReader(new FileReader(input_fd));
-                tmp_line = buf_reader.readLine();//read the first line from file
-                
-                buf_writer = new BufferedWriter( new OutputStreamWriter( 
-                        new FileOutputStream(output_file_name),"UTF-8" ) );//set the output stream encoding as utf-8
-                
-                while(tmp_line != null){
-                    
-                    file_size_counter += tmp_line.getBytes(utf8).length;
-                    //TODO : other encoding type
-                    
-                    try{
-                        buf_writer.write(tmp_line);//write into output file
-                        buf_writer.newLine();
-                        buf_writer.flush();
-                    }catch(IOException e){
-                        //System.out.println("Warning: writer wrote error");
-                        JOptionPane.showMessageDialog(null, "Error: an error occured when writing into file", "Warning",JOptionPane.WARNING_MESSAGE);
-                    }
-                    
-                    if(file_size_counter >= split_by_size){//change to new file
-                        
-                        //buf_writer.close();//close the old output file
-                        
-                        file_size_counter = 0;
-                        output_file_name_index++;
-                        output_file_name = set_output_file_name(output_file_name_format, output_file_name_index);
-                        buf_writer = new BufferedWriter( new OutputStreamWriter ( 
-                                new FileOutputStream(output_file_name),"UTF-8") );
-                        
-                        //System.out.println("==============");//test
-                        
-                    }
-                    
-                    tmp_line = buf_reader.readLine();//read next line from file
-                }
-                buf_writer.close();
-                buf_reader.close();
-                JOptionPane.showMessageDialog(null, "File splitted successfully", "Notice",JOptionPane.WARNING_MESSAGE);
-                
-            } catch (FileNotFoundException ex) {
-                JOptionPane.showMessageDialog(null, "Error: file not found", "Warning",JOptionPane.WARNING_MESSAGE);
-                return;
-            } catch (IOException ex) {
-                Logger.getLogger(TwTextSpliterGUI.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(null, "Error: unknown error occured", "Warning",JOptionPane.WARNING_MESSAGE);
-                return;
-            }*/
+     
         }else if(RB_custom_delimiter.isSelected()){
             
             /*========================== split the file by custom delimiter ==========================*/
