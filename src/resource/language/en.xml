@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!--
+Whenever changed this file, remember to check markers in LanguageManager.java and other language xml files
+-->
+<lan>
+<textfield>
+	<input_file_path>Input File Path</input_file_path>
+	<output_file_path>Output File Path</output_file_path>
+	<output_file_name>Output File Name</output_file_name>
+	<split_by>Split By</split_by>
+	<input_encoding>Input Encoding</input_encoding>
+	<output_encoding>Output Encoding</output_encoding>
+	<language>Language</language>
+	<lines_per_file>Lines per File</lines_per_file>
+	<size_per_file>Size per File</size_per_file>
+	<custom_delimiter>Custom Delimiter</custom_delimiter>
+	<delete_source_after_splited>Delete source after splited</delete_source_after_splited>
+	<auto>AUTO</auto>
+</textfield>
+<msg>
+	<valid>
+		<success>File splitted successfully</success>
+	</valid>
+	<warning>
+		<lines_null>Please input the lines</lines_null>
+		<size_null>Please input the size</size_null>
+		<delimiter_null>Please input the delimiter</delimiter_null>
+		<split_method_null>Require a split method</split_method_null>
+	</warning>
+	<error>
+		<lines_error>Invalid number of lines</lines_error>
+		<size_error>Invalid size</size_error>
+		<delimiter_error>Invalid delimiter</delimiter_error>
+		<file_writting_failed>An error occured when writing into file</file_writting_failed>
+		<file_not_found>File not found</file_not_found>
+		<unknown_error>An unknown error occured</unknown_error>
+	</error>
+</msg>
+<button>
+	<browse>Browse...</browse>
+	<save_as>Save As...</save_as>
+	<split>Split</split>
+</button>
+</lan>

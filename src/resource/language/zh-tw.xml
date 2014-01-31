@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<lan>
+<textfield>
+	<input_file_path>來源檔案路徑</input_file_path>
+	<output_file_path>輸出檔案路徑</output_file_path>
+	<output_file_name>輸出檔名格式</output_file_name>
+	<split_by>分割依照</split_by>
+	<input_encoding>來源編碼</input_encoding>
+	<output_encoding>輸出編碼</output_encoding>
+	<language>語言</language>
+	<lines_per_file>行數</lines_per_file>
+	<size_per_file>檔案大小</size_per_file>
+	<custom_delimiter>自定義分割符</custom_delimiter>
+	<delete_source_after_splited>分割完成後刪除原檔</delete_source_after_splited>
+	<auto>自動偵測</auto>
+</textfield>
+<msg>
+	<valid>
+		<success>檔案成功分割</success>
+	</valid>
+	<warning>
+		<lines_null>請輸入要分割的行數</lines_null>
+		<size_null>請輸入要分割成的大小</size_null>
+		<delimiter_null>Please input the delimiter</delimiter_null>
+		<split_method_null>請選擇一個分割方法</split_method_null>
+	</warning>
+	<error>
+		<lines_error>行數輸入不正確</lines_error>
+		<size_error>檔案大小輸入不正確</size_error>
+		<delimiter_error>Invalid delimiter</delimiter_error>
+		<file_writting_failed>檔案寫入時發生錯誤</file_writting_failed>
+		<file_not_found>來源檔案不存在</file_not_found>
+		<unknown_error>未知的錯誤發生</unknown_error>
+	</error>
+</msg>
+<button>
+	<browse>瀏覽</browse>
+	<save_as>儲存為</save_as>
+	<split>進行分割</split>
+</button>
+</lan>
